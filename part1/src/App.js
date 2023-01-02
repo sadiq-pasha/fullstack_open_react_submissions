@@ -1,66 +1,54 @@
-const Header = (props) => {
+import { useState } from "react";
+
+const Button = (props) => {
   return (
     <>
-      <h1>{props.course.name}</h1>
+      <button onClick={() => props.onClick(props.currentState,props.setFunction,props.text)}>{props.text}</button>
     </>
   )
 }
 
-const Part = (props) => {
+const Display = (props) => {
   return (
     <>
-      <p>
-        {props.part} {props.exercises}
-      </p>
-    </>
-  )
-}
-
-const Content = (props) => {
-  console.log(props.course.parts)
-  return (
-    <>
-      <Part part={props.course.parts[0].name} exercises={props.course.parts[0].exercises}/>
-      <Part part={props.course.parts[1].name} exercises={props.course.parts[1].exercises}/>
-      <Part part={props.course.parts[2].name} exercises={props.course.parts[2].exercises}/>
-    </>
-  )
-}
-
-const Total = (props) => {
-  return (
-    <>
-      <p>
-        Number of exercises {props.course.parts[0].exercises + props.course.parts[1].exercises + props.course.parts[2].exercises}
-      </p>
+      <p>good {props.good}</p>
+      <p>neutral {props.neutral}</p>
+      <p>bad {props.bad}</p>
+      <p>all {props.reviews.length}</p>
+      <p>average {props.averageReviewScore}</p>
     </>
   )
 }
 
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+  const [reviews, setReviews] = useState([])
+  const [averageReviewScore,setaverageReviewScore] = useState(0)
+
+  const handleClick = (currentState,setFunction,buttonName) => {
+    setReviews(reviews.concat(buttonName))
+    setFunction(currentState + 1)
+    // console.log(reviews)
+    setaverageReviewScore(reviews.filter((review) => review === "good"))
+    // console.log(averageReviewScore)
   }
+  console.log(reviews)
+  
   return (
-    <div>
-      <Header course={course}/>
-      <Content course={course}/>
-      <Total course={course}/>
-    </div>
+    <>
+      <div>
+        <h1>give feedback</h1>
+      </div>
+      <div>
+        <Button text="good" onClick={handleClick} currentState={good} setFunction={setGood}/>
+        <Button text="neutral" onClick={handleClick} currentState={neutral} setFunction={setNeutral}/>
+        <Button text="bad" onClick={handleClick} currentState={bad} setFunction={setBad}/>
+        <h1>statistics</h1>
+        <Display good={good} neutral={neutral} bad={bad} reviews={reviews} averageReviewScore={averageReviewScore}/>
+      </div>
+    </>
   )
 }
 
