@@ -2,53 +2,70 @@ import { useState } from "react";
 
 const Button = (props) => {
   return (
-    <>
-      <button onClick={() => props.onClick(props.currentState,props.setFunction,props.text)}>{props.text}</button>
-    </>
+    <button onClick={(e) => props.handleClick(e, props.text)}>{props.text}</button>
   )
 }
 
-const Display = (props) => {
+const StatisticLine = (props) => {
   return (
-    <>
-      <p>good {props.good}</p>
-      <p>neutral {props.neutral}</p>
-      <p>bad {props.bad}</p>
-      <p>all {props.reviews.length}</p>
-      <p>average {props.averageReviewScore}</p>
-    </>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value}</td>
+    </tr>
   )
 }
+
+const Statistics = (props) => {
+  const numberOfGoodReviews = props.value.filter((element) => element === "good").length
+  const numberOfNeutralReviews = props.value.filter((element) => element === "neutral").length
+  const numberOfBadReviews = props.value.filter((element) => element === "bad").length
+  const mantissaLength = 3
+  const averageReview = Math.trunc(((numberOfGoodReviews-numberOfBadReviews)/props.value.length) * Math.pow(10, mantissaLength)) / Math.pow(10, mantissaLength)
+  const positiveReview = Math.trunc((((numberOfGoodReviews)/props.value.length)*100) * Math.pow(10, mantissaLength)) / Math.pow(10, mantissaLength)
+  if (props.value.length === 0){
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  }
+  else {
+    return (
+      <table>
+        <StatisticLine text="good" value={numberOfGoodReviews}/>
+        <StatisticLine text="neutral" value={numberOfNeutralReviews}/>
+        <StatisticLine text="bad" value={numberOfBadReviews}/>
+        <StatisticLine text="all" value={props.value.length}/>
+        <StatisticLine text="average" value={averageReview}/>
+        <StatisticLine text="positive" value={`${positiveReview}%`}/>
+      </table>
+      )
+  }
+}
+
 
 const App = () => {
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-  const [reviews, setReviews] = useState([])
-  const [averageReviewScore,setaverageReviewScore] = useState(0)
-
-  const handleClick = (currentState,setFunction,buttonName) => {
-    setReviews(reviews.concat(buttonName))
-    setFunction(currentState + 1)
-    // console.log(reviews)
-    setaverageReviewScore(reviews.filter((review) => review === "good"))
-    // console.log(averageReviewScore)
-  }
-  console.log(reviews)
+  const [feedbackArray, setFeedbackArray] = useState([])
   
+  const changeFeedbackArray = (e, newValue) => {
+    console.log(e)
+    if (newValue === "reset") {
+      setFeedbackArray([])
+    } else {
+      setFeedbackArray(feedbackArray.concat(newValue))
+    }
+  }
+
   return (
-    <>
-      <div>
-        <h1>give feedback</h1>
-      </div>
-      <div>
-        <Button text="good" onClick={handleClick} currentState={good} setFunction={setGood}/>
-        <Button text="neutral" onClick={handleClick} currentState={neutral} setFunction={setNeutral}/>
-        <Button text="bad" onClick={handleClick} currentState={bad} setFunction={setBad}/>
-        <h1>statistics</h1>
-        <Display good={good} neutral={neutral} bad={bad} reviews={reviews} averageReviewScore={averageReviewScore}/>
-      </div>
-    </>
+    <div>
+      <h1>give feedback</h1>
+      <Button handleClick={changeFeedbackArray} text="good"/>
+      <Button handleClick={changeFeedbackArray} text="neutral"/>
+      <Button handleClick={changeFeedbackArray} text="bad"/>
+      <Button handleClick={changeFeedbackArray} text="reset"/>
+      <h1>statistics</h1>
+      <Statistics value={feedbackArray}/>
+    </div>
   )
 }
 
