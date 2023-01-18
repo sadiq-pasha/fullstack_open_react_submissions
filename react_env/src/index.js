@@ -1,13 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import UnicafeApp from './UnicafeApp';
-import AnecdotesApp from './Anecdotes';
-import CoursesApp from './Courses';
+import UnicafeApp from './1.6-1.11_UnicafeApp';
+import AnecdotesApp from './1.12-1.14_Anecdotes';
+import CoursesApp from './1.1-1.5_Courses';
+import CourseInformation from './2.1-2.5_CourseInformation';
 
 ReactDOM.createRoot(document.getElementById('courses')).render(<CoursesApp />);
 ReactDOM.createRoot(document.getElementById('unicafe')).render(<UnicafeApp />);
 ReactDOM.createRoot(document.getElementById('anecdotes')).render(<AnecdotesApp />);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+ReactDOM.createRoot(document.getElementById('courseInformation')).render(<CourseInformation/>)

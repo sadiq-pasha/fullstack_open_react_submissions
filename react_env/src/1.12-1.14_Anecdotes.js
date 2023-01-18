@@ -25,7 +25,7 @@ const AnecdotesApp = () => {
     const handleClick = (buttonFunction) => {
         let newAnecdotesIndex = selected
         let resetVotes = [...votes]
-    
+        
         if (buttonFunction === "random") {
             while (newAnecdotesIndex === selected) {
                 newAnecdotesIndex = Math.floor(Math.random() * (anecdotes.length))
