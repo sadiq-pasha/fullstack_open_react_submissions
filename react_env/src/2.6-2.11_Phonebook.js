@@ -1,29 +1,6 @@
 import { useState, useEffect } from 'react'
 import phoneBookService from './services/numbers'
 
-const defaultPhonebook = [
-    { 
-      "name": "Arto Hellas", 
-      "number": "040-123456",
-      "id": 1
-    },
-    { 
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    { 
-      "name": "Dan Abramov", 
-      "number": "12-43-234345",
-      "id": 3
-    },
-    { 
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122",
-      "id": 4
-    }
-  ]
-
 const Display = ({persons, filterName, handleDelete}) => {
     let filteredPersonsList = persons.filter((person) => {
         return person.name.toLowerCase().includes(filterName.toLowerCase())
@@ -71,6 +48,10 @@ const Form = (props) => {
         </div>
         <div>
             <button type="submit" onClick={(event) => props.handleNewEntry(event, "reset")}>reset</button>
+            <p>WARNING! reset could crash the server.<br/>
+            JSON-server has a bug where it reloads the db.json after a batch of requests.<br/>
+            If a POST request is made during the reload it throws a 404 error and crashes the server.<br/>
+            This can be avoided by not using the --watch flag when starting the server (that has problems of its own).</p>
         </div>
     </form>
 
@@ -123,14 +104,19 @@ const PhoneBook = () => {
                     .then(response => {
                         setPersons(persons.concat(response))
                     })
-            setNewName("")
-            setNewNumber("")
+                setNewName("")
+                setNewNumber("")
             }
+        } else if (buttonFunction === "reset") {
+            console.log(persons)
+            phoneBookService.resetDefault(persons)
+                .then((response) => {
+                    setPersons(response)
+                })
         }
     }
 
     const handleInputChange = (event, inputField) => {
-    // console.log(inputField)
         if (inputField === "name") {
             setNewName(event.target.value)
         } else if (inputField === "number") {
