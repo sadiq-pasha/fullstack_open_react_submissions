@@ -3,10 +3,36 @@ import { useState, useEffect } from 'react'
 import Note from './components/Note'
 import noteService from './services/notes'
 
+const Notification = ({ message }) => {
+    if (message === null) {
+        return null
+    }
+    return (
+        <div className='error'>
+            {message}
+        </div>
+    )
+}
+
+const Footer = () => {
+    const footerStyle = {
+        color: 'green',
+        fontStyle: 'italic',
+        fontSize: 16
+    }
+    return (
+        <div style={footerStyle}>
+            <br />
+            <em>Note app, Department of Comp Sci, U of H</em>
+        </div>
+    )
+}
+
 const App = () => {
     const [notes, setNotes] = useState([])
     const [newNote, setNewNote] = useState('')
     const [showAll, setShowAll] = useState(true)
+    const [errorMessage, setErrorMessage] = useState(null)
 
     useEffect (() => {
         noteService
@@ -41,7 +67,6 @@ const App = () => {
     }
 
     const toggleImportance = (id) => {
-        console.log(id)
         const note = notes.find(n => n.id === id)
         const changedNote = {...note, important: !note.important}
         
@@ -50,8 +75,13 @@ const App = () => {
             .then(returnedNote => {
             setNotes(notes.map(note => note.id !== id ? note : returnedNote))
             })
-            .catch(error => {
-                alert(`the note ${note.content} was already deleted from the server`)
+            .catch(() => {
+                setErrorMessage(
+                    `this note was already removed from the server`
+                )
+                setTimeout(() => {
+                    setErrorMessage(null)
+                }, 5000);
                 setNotes(notes.filter(n => n.id !== id))
             })
     }
@@ -61,8 +91,9 @@ const App = () => {
     return (
         <div>
             <h2>NOTES</h2>
+            <Notification message={errorMessage}/>
             <ul>
-                {notesToShow.map((note, index) => 
+                {notesToShow.map((note) => 
                     <Note 
                         key={note.id} 
                         note={note} 
@@ -76,6 +107,7 @@ const App = () => {
             </form>
             <button onClick={() => setShowAll(!showAll)}>show {showAll ? 'important' : 'all'}</button>
             <button onClick={handleReset}>reset</button>
+            <Footer/>
         </div>
     )
 }

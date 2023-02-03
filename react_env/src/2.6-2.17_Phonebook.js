@@ -66,11 +66,37 @@ const Filter = (props) => {
     )
 }
 
+const AddSuccessNotification = (props) => {
+    if (props.name === null) {
+        return null
+    } else {
+        return (
+            <div className='addNotification'>
+                Added {props.name} to the phonebook
+            </div>
+        )
+    }
+}
+const DeleteErrorNotification = (props) => {
+    if (props.name === null) {
+        return null
+    } else {
+        return (
+            <div className='deleteErrorNotification'>
+                {props.name} has already been deleted
+            </div>
+        )
+    }
+}
+
+
 const PhoneBook = () => {
     const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filterName, setFilterName] = useState('')
+    const [phonebookChangeNotification, setPhonebookChangeNotification] = useState(null)
+    const [deleteErrorNotification, setDeleteErrorNotification] = useState(null)
 
     useEffect(() => {
         phoneBookService
@@ -94,6 +120,15 @@ const PhoneBook = () => {
                     phoneBookService
                         .updatePhonebookEntries(updatedEntry.id, updatedEntry)
                         .then(response => setPersons(persons.map(p => p.id !== updatedEntry.id ? p : response)))
+                        .catch(() => {
+                            setDeleteErrorNotification(newName)
+                            setTimeout(() => {
+                                setDeleteErrorNotification(null)
+                            }, 3000);
+                            phoneBookService
+                                .getPhonebookEntries()
+                                .then((response) => setPersons(response))
+                        })
                 }
             } else if (newName && newNumber) {
                 const newPerson = {
@@ -103,19 +138,22 @@ const PhoneBook = () => {
                 phoneBookService.createPhonebookEntries(newPerson)
                     .then(response => {
                         setPersons(persons.concat(response))
+                        setPhonebookChangeNotification(response.name)
+                        setTimeout(() => {
+                            setPhonebookChangeNotification(null)
+                        }, 3000);
+                        setNewName("")
+                        setNewNumber("")
                     })
-                setNewName("")
-                setNewNumber("")
+                }
+            } else if (buttonFunction === "reset") {
+                phoneBookService.resetDefault(persons)
+                    .then((response) => {
+                        setPersons(response)
+                    })
             }
-        } else if (buttonFunction === "reset") {
-            console.log(persons)
-            phoneBookService.resetDefault(persons)
-                .then((response) => {
-                    setPersons(response)
-                })
         }
-    }
-
+        
     const handleInputChange = (event, inputField) => {
         if (inputField === "name") {
             setNewName(event.target.value)
@@ -125,21 +163,31 @@ const PhoneBook = () => {
             setFilterName(event.target.value)
         }
     }
-
+    
     const handleDelete = (event) => {
         const deleteEntry = persons.filter(p => p.id === parseInt(event.target.id))
         if (window.confirm(`${deleteEntry[0].name} will be deleted. Are you sure?`)) {
             phoneBookService
-                .deletePhonebookEntries(event.target.id)
-                .then(setPersons(persons.filter(p => p.id !== parseInt(event.target.id))))
+                .deletePhonebookEntries(deleteEntry[0].id)
+                .catch(() => {
+                    setDeleteErrorNotification(deleteEntry[0].name)
+                    setTimeout(() => {
+                        setDeleteErrorNotification(null)
+                    }, 5000);
+                })
+                .finally(() => phoneBookService
+                                    .getPhonebookEntries()
+                                    .then((response) => setPersons(response)))
+            }
         }
-    }
-
-  return (
-    <div>
+        
+        return (
+            <div>
         <h2>PHONEBOOK</h2>
         <Filter filterName={filterName} handleInputChange={handleInputChange}/>
         <Form newName={newName} newNumber={newNumber} handleInputChange={handleInputChange} handleNewEntry={handleNewEntry}/>
+        <AddSuccessNotification name={phonebookChangeNotification}/>
+        <DeleteErrorNotification name={deleteErrorNotification}/>
         <h3>Numbers</h3>
         <Display persons={persons} filterName={filterName} handleDelete={handleDelete}/>
     </div>

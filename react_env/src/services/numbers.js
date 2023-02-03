@@ -34,7 +34,6 @@ const getPhonebookEntries = () => {
 
 const resetDefault = (persons) => {
     const phonebookIDs = persons.map(p => p.id)
-    console.log(phonebookIDs)
     const deletePersons = Promise
                     .all(phonebookIDs.map(personID => {
                         return deletePhonebookEntries(personID)
@@ -64,10 +63,13 @@ const updatePhonebookEntries = (entryId, updatedPersonObject) => {
     const request = axios.put(`${baseUrl}/${entryId}`, updatedPersonObject)
     return request.then(response => response.data)
 }
-export default {
+
+const phoneBookService =  {
     getPhonebookEntries,
     resetDefault,
     createPhonebookEntries,
     deletePhonebookEntries,
     updatePhonebookEntries
 }
+
+export default phoneBookService

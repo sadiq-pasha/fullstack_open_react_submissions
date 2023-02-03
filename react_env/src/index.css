@@ -1,0 +1,38 @@
+h1 {
+    color: brown;
+    font-style: italic;
+}
+
+h2 {
+    color: green;
+    font-style: italic;
+}
+
+.note {
+    color: blue;
+    padding-top: 3px;
+    font-size: 18px;
+}
+
+.error {
+    color: red;
+    background: lightgrey;
+    font-size: 16px;
+    border-color: gray;
+    border-radius: 12px;
+    border-style: solid;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: fit-content;
+}
+
+.addNotification, .deleteErrorNotification {
+    color: green;
+    background:  lightgreen;
+    font-size: 16px;
+    border-color: gray;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: fit-content;
+}
