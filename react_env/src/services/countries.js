@@ -1,12 +1,12 @@
 import axios from "axios";
 
-let base_url = 'http://localhost:3001/countries'
+let base_url = 'http://192.168.1.60:3000/countries'
 
 const getCountries = () => {
     console.log('fetchingdata')
     return axios
-        .get(base_url)
-        .then(response => {
+    .get(base_url)
+    .then(response => {
             return response.data
         })
 }

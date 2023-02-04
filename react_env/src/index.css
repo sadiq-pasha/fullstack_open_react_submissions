@@ -5,7 +5,66 @@ h1 {
 
 h2 {
     color: green;
-    font-style: italic;
+    text-align: center;
+    font-style: normal;
+}
+
+.single-country-display{
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 2px black;
+}
+
+.country-title {
+    text-align: center;
+    font-size: 20px;
+}
+
+.flag-image {
+    width: 50%;
+    margin: auto;
+    display: block;
+    text-align: center;
+    border: 2px;
+    border-style: solid;
+}
+
+.top-div {
+    margin: auto;
+    padding: 10px
+}
+
+.filter {
+    line-height: 2px;
+    text-align: left;
+    margin: auto;
+    color: #962626;   
+}
+
+.filtered-table{ 
+    margin: 10px;
+    table-layout: fixed;
+    width: auto;
+}
+
+.filtered-table td {
+    padding: 5px;
+    text-align: left;
+}
+
+table { 
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 3px;
+    table-layout: auto;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 15px;
+    border:  1px solid black;
+    text-align: left;
 }
 
 .note {

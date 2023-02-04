@@ -11,46 +11,148 @@ const CountryListDisplay = ({country, onClick}) => {
     )
 }
 
-const SingleCountryDisplay = (props) => {
+const SingleCountryDisplay = ({ country }) => {
     return (
-        <div>
-            {props.country.name.official}
+        <div className='single-country-display'>
+            <p className='country-title'>
+                <b>{country.name.common.toUpperCase()}</b>
+            </p>
+            <img className='flag-image'
+                src={country.flags.svg} 
+                alt={country.flags.alt} 
+                title={country.name.common}
+            />
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Official name</td>
+                        <td>{country.name.official}</td>
+                    </tr>
+                    <tr>
+                        <td>Capital city</td>
+                        <td>{country.capital}</td>
+                    </tr>
+                    <tr>
+                        <td>Currency</td>
+                        <td>
+                            <ul>
+                                {Object.values(country.currencies).map(currency => currency.name).map(currency => {
+                                    return <li key={currency}>{currency}</li>
+                                    }
+                                )}
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Population</td>
+                        <td>{country.population}</td>
+                    </tr>
+                    <tr>
+                        <td>Languages</td>
+                        <td>
+                            <ul>
+                                {Object.values(country.languages).map(language => {
+                                    return <li key={language}>{language}</li>
+                                    }
+                                )}
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Landlocked?</td>
+                        <td>{country.landlocked ? 'Yes' : 'No'}</td>
+                    </tr>
+                </tbody>
+            </table>
+
         </div>
     )
 }
 
-const Display = ({countriesAll, filterInput, onClick}) => {
-    if(countriesAll) {
-        const filteredCountries = countriesAll
-                                .filter(eachCountry => eachCountry.name.common.toLowerCase().includes(filterInput.toLowerCase()))
-        if (filteredCountries.length === 1) {
-            <SingleCountryDisplay country={filteredCountries[0]}/>
-        } else if ((filteredCountries.length > 1) && (filteredCountries.length < 11)) {
-            return (
-                <div>
-                    <table>
-                        <tbody>
-                            {filteredCountries
-                                    .map(eachCountry => eachCountry.name.common)
-                                    .sort()
-                                    .map(eachCountry => <CountryListDisplay key={eachCountry} country={eachCountry} onClick={onClick}/>
+const Display = ({countries, onClick, randomCountry}) => {
+    if (countries.length === 1) {
+        return (
+            <div>
+                <p>Found 1 match: {countries[0].name.common}</p>
+                <SingleCountryDisplay country={countries[0]}/>
+            </div>
+        )
+    } else if (countries.length === 0) {
+        return (
+            <div>
+                <p>
+                    No matches found!
+                </p>
+                <SingleCountryDisplay country={randomCountry}/>
+            </div>
+        )
+    } else if ((countries.length > 1) && (countries.length < 11)) {
+        return (
+            <div>
+                <table className='filtered-table'>
+                    <tbody>
+                        {countries
+                                .map(eachCountry => eachCountry.name.common)
+                                .sort()
+                                .map(eachCountry => <CountryListDisplay key={eachCountry} country={eachCountry} onClick={onClick}/>
                                 )}
-                        </tbody>
-                    </table>
-                </div>
-            )
-        } else {
-            return (
-                <div>
-                    <p>
-                        Too many entries. Please narrow the search field.<br />
-                        Meanwhile here are facts about a randomly selected country
-                    </p>
-                    <SingleCountryDisplay country={filteredCountries[Math.floor(Math.random() * filteredCountries.length)]}/>
-                </div>
-            )
-        }
+                    </tbody>
+                </table>
+                <SingleCountryDisplay country={randomCountry}/>
+            </div>
+        )
     } else {
+        return (
+            <div>
+                <p>
+                    Too many entries. Please narrow the search field.<br />
+                    Meanwhile here are facts about a randomly selected country
+                </p>
+                <SingleCountryDisplay country={randomCountry}/>
+            </div>
+        )
+    }
+}
+
+const Filter = ({filterInput, onChange, onClick}) => {
+    return (
+        <div className='filter'>
+            <p>Search: <input type="text" value={filterInput} onChange={onChange}/></p>
+            <p>Randomize: <button onClick={onClick}>Choose random</button></p>
+        </div>
+    )
+}
+
+const Countries = () => {
+    const [countriesAll, setCountriesAll] = useState([])
+    const [filterInput, setFilterInput] = useState('')
+    const [randomCountry, setRandomCountry] = useState(null)
+
+    useEffect(() => {
+        countriesServices
+        .getCountries()
+        .then((response) => {
+            setCountriesAll(response)
+            setRandomCountry(response[Math.floor(Math.random() * response.length)])
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    },[])
+    
+    const filterInputHandler = (event) => {
+        setFilterInput(event.target.value)
+    } 
+    
+    const showClickHandler = (event) => {
+        setFilterInput(event.target.name)
+    } 
+    
+    const randomClick = (event) => {
+        setRandomCountry(countriesAll[Math.floor(Math.random() * countriesAll.length)])
+    }
+    
+    if (countriesAll.length === 0) {
         return (
             <>
                 <p>
@@ -59,47 +161,19 @@ const Display = ({countriesAll, filterInput, onClick}) => {
                 </p>
             </>
         )
-    }
-}
-
-const Filter = ({filterInput, onChange}) => {
-    return (
-        <div>
-            <input type="text" value={filterInput} onChange={onChange}/>
-        </div>
-    )
-}
-
-const Countries = () => {
-    const [countriesAll, setCountriesAll] = useState([])
-    const [filterInput, setFilterInput] = useState('')
-
-    useEffect(() => {
-        countriesServices
-                    .getCountries()
-                    .then((response) => {
-                        setCountriesAll(response)
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
-    },[])
-    
-    const filterInputHandler = (event) => {
-        setFilterInput(event.target.value)
-    } 
-
-    const showClickHandler = (event) => {
-        setFilterInput(event.target.name)
-    } 
-    if (countriesAll.length === 0) {
-        return null
     } else {
-        console.log(countriesAll.length)
+        const filteredCountries = countriesAll
+                                .filter(
+                                    eachCountry => eachCountry.name.common.toLowerCase().includes(filterInput.toLowerCase())
+                                )
         return (
-            <div>
-                <Filter filterInput={filterInput} onChange={filterInputHandler}/>
-                <Display countriesAll={countriesAll} filterInput={filterInput} onClick={showClickHandler}/>
+            <div className='top-div'>
+                <Filter filterInput={filterInput} onChange={filterInputHandler} onClick={randomClick}/>
+                <Display
+                    countries={filteredCountries} 
+                    onClick={showClickHandler} 
+                    randomCountry={randomCountry}
+                />
             </div>
         )
     }
