@@ -10,7 +10,7 @@ import CoursesApp from './1.1-1.5_Courses';
 
 import CourseInformation from './2.1-2.5_CourseInformation';
 import PhoneBook from './2.6-2.17_Phonebook';
-import Countries from './2.18-2.20 Countries';
+import Countries from './2.18-2.20_Countries';
 // const notes = [
 //     {
 //       id: 1,
