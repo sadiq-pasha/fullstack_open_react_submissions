@@ -11,6 +11,38 @@ const CountryListDisplay = ({country, onClick}) => {
     )
 }
 
+const WeatherDisplay = ({ latitude, longitude }) => {
+    
+    const [weather, setWeather] = useState({'imgurl':null, 'description':null, 'temperature':null})
+
+    useEffect(() => {
+        setWeather(null)
+        countriesServices
+            .getWeather(latitude, longitude)
+            .then((response) => {
+                const weatherImageUrl =`http://openweathermap.org/img/wn/${response.list[0].weather[0].icon}@2x.png` 
+                const skyConditions = response.list[0].weather[0].description
+                const temperature = response.list[0].main.temp
+                const newWeatherObject = {'imgurl':weatherImageUrl, 'description':skyConditions, 'temperature':temperature}
+                setWeather(newWeatherObject)
+            })
+    },[latitude,longitude])
+    if (weather) {
+        return (
+            <td>
+                <img src={weather.imgurl} alt={weather.description} /><br/>
+                {Math.trunc((weather.temperature - 273) * 100) / 100}&deg;C and {weather.description}
+            </td>
+        )
+    } else {
+        return (
+            <td>
+                Fetching weather info
+            </td>
+        )
+    }
+}
+
 const SingleCountryDisplay = ({ country }) => {
     return (
         <div className='single-country-display'>
@@ -21,7 +53,7 @@ const SingleCountryDisplay = ({ country }) => {
                 src={country.flags.svg} 
                 alt={country.flags.alt} 
                 title={country.name.common}
-            />
+                />
             <table>
                 <tbody>
                     <tr>
@@ -33,13 +65,17 @@ const SingleCountryDisplay = ({ country }) => {
                         <td>{country.capital}</td>
                     </tr>
                     <tr>
+                        <td>Current Weather</td>
+                        <WeatherDisplay latitude={country.capitalInfo.latlng[0]} longitude={country.capitalInfo.latlng[1]}/>
+                    </tr>
+                    <tr>
                         <td>Currency</td>
                         <td>
                             <ul>
                                 {Object.values(country.currencies).map(currency => currency.name).map(currency => {
                                     return <li key={currency}>{currency}</li>
                                     }
-                                )}
+                                    )}
                             </ul>
                         </td>
                     </tr>
@@ -53,7 +89,7 @@ const SingleCountryDisplay = ({ country }) => {
                             <ul>
                                 {Object.values(country.languages).map(language => {
                                     return <li key={language}>{language}</li>
-                                    }
+                                }
                                 )}
                             </ul>
                         </td>
@@ -64,7 +100,6 @@ const SingleCountryDisplay = ({ country }) => {
                     </tr>
                 </tbody>
             </table>
-
         </div>
     )
 }
@@ -130,14 +165,14 @@ const Countries = () => {
 
     useEffect(() => {
         countriesServices
-        .getCountries()
-        .then((response) => {
-            setCountriesAll(response)
-            setRandomCountry(response[Math.floor(Math.random() * response.length)])
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+            .getCountries()
+            .then((response) => {
+                setCountriesAll(response)
+                setRandomCountry(response[Math.floor(Math.random() * response.length)])
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     },[])
     
     const filterInputHandler = (event) => {
@@ -148,7 +183,8 @@ const Countries = () => {
         setFilterInput(event.target.name)
     } 
     
-    const randomClick = (event) => {
+    const randomClick = () => {
+        setFilterInput('')
         setRandomCountry(countriesAll[Math.floor(Math.random() * countriesAll.length)])
     }
     
