@@ -183,14 +183,14 @@ const PhoneBook = () => {
         
         return (
             <div>
-        <h2>PHONEBOOK</h2>
-        <Filter filterName={filterName} handleInputChange={handleInputChange}/>
-        <Form newName={newName} newNumber={newNumber} handleInputChange={handleInputChange} handleNewEntry={handleNewEntry}/>
-        <AddSuccessNotification name={phonebookChangeNotification}/>
-        <DeleteErrorNotification name={deleteErrorNotification}/>
-        <h3>Numbers</h3>
-        <Display persons={persons} filterName={filterName} handleDelete={handleDelete}/>
-    </div>
+                <h2>PHONEBOOK</h2>
+                <Filter filterName={filterName} handleInputChange={handleInputChange}/>
+                <Form newName={newName} newNumber={newNumber} handleInputChange={handleInputChange} handleNewEntry={handleNewEntry}/>
+                <AddSuccessNotification name={phonebookChangeNotification}/>
+                <DeleteErrorNotification name={deleteErrorNotification}/>
+                <h3>Numbers</h3>
+                <Display persons={persons} filterName={filterName} handleDelete={handleDelete}/>
+        </div>
   )
 }
 

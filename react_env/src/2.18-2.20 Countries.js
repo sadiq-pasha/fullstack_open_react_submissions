@@ -54,7 +54,7 @@ const SingleCountryDisplay = ({ country }) => {
                 alt={country.flags.alt} 
                 title={country.name.common}
                 />
-            <table>
+            <table className='fact-table'>
                 <tbody>
                     <tr>
                         <td>Official name</td>
@@ -204,6 +204,7 @@ const Countries = () => {
                                 )
         return (
             <div className='top-div'>
+                <h2>COUNTRY FACT SHEET</h2>
                 <Filter filterInput={filterInput} onChange={filterInputHandler} onClick={randomClick}/>
                 <Display
                     countries={filteredCountries} 
