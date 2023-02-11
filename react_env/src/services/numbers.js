@@ -28,7 +28,7 @@ const baseUrl = 'http://localhost:3001/api/persons'
 const getPhonebookEntries = () => {
     const request = axios.get(baseUrl)
     return request.then(response => { 
-        console.log(response)  
+        console.log('GET ALL')  
         return response.data
     })
 }

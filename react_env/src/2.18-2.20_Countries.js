@@ -44,6 +44,7 @@ const WeatherDisplay = ({ latitude, longitude }) => {
 }
 
 const SingleCountryDisplay = ({ country }) => {
+    console.log('single country', country)
     return (
         <div className='single-country-display'>
             <p className='country-title'>
@@ -66,7 +67,10 @@ const SingleCountryDisplay = ({ country }) => {
                     </tr>
                     <tr>
                         <td>Current Weather</td>
-                        <WeatherDisplay latitude={country.capitalInfo.latlng[0]} longitude={country.capitalInfo.latlng[1]}/>
+                        {Object.keys(country.capitalInfo).length === 0 ?
+                            <td> Weather data unavailable </td> :
+                            <WeatherDisplay latitude={country.capitalInfo.latlng[0]} longitude={country.capitalInfo.latlng[1]}/>
+                        }
                     </tr>
                     <tr>
                         <td>Currency</td>
@@ -105,6 +109,7 @@ const SingleCountryDisplay = ({ country }) => {
 }
 
 const Display = ({countries, onClick, randomCountry}) => {
+    console.log(countries.map(c => c.name.common))
     if (countries.length === 1) {
         return (
             <div>
@@ -162,6 +167,7 @@ const Countries = () => {
     const [countriesAll, setCountriesAll] = useState([])
     const [filterInput, setFilterInput] = useState('')
     const [randomCountry, setRandomCountry] = useState(null)
+    const [strictFilter, setStrictFilter] = useState(false)
 
     useEffect(() => {
         countriesServices
@@ -176,10 +182,12 @@ const Countries = () => {
     },[])
     
     const filterInputHandler = (event) => {
+        setStrictFilter(false)
         setFilterInput(event.target.value)
     } 
     
     const showClickHandler = (event) => {
+        setStrictFilter(true)
         setFilterInput(event.target.name)
     } 
     
@@ -198,10 +206,16 @@ const Countries = () => {
             </>
         )
     } else {
-        const filteredCountries = countriesAll
-                                .filter(
-                                    eachCountry => eachCountry.name.common.toLowerCase().includes(filterInput.toLowerCase())
-                                )
+        const filteredCountries = strictFilter ? 
+                                    [].concat(countriesAll
+                                    .find(
+                                        eachCountry => eachCountry.name.common === filterInput
+                                    )) 
+                                    : 
+                                    countriesAll
+                                    .filter(
+                                        eachCountry => eachCountry.name.common.toLowerCase().includes(filterInput.toLowerCase())
+                                    )
         return (
             <div className='top-div'>
                 <h2>COUNTRY FACT SHEET</h2>

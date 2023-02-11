@@ -52,6 +52,8 @@ const Form = (props) => {
             JSON-server has a bug where it reloads the db.json after a batch of requests.<br/>
             If a POST request is made during the reload it throws a 404 error and crashes the server.<br/>
             This can be avoided by not using the --watch flag when starting the server (that has problems of its own).</p>
+            
+            Safe if not using express
         </div>
     </form>
 
@@ -83,12 +85,11 @@ const DeleteErrorNotification = (props) => {
     } else {
         return (
             <div className='deleteErrorNotification'>
-                {props.name} has already been deleted
+                {props.name} has already been deleted or the server does not allow updates
             </div>
         )
     }
 }
-
 
 const PhoneBook = () => {
     const [persons, setPersons] = useState([])
