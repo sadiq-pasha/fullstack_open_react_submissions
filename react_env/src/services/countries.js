@@ -10,6 +10,7 @@ const getCountries = () => {
     }
 
 const getData = (countryName) => {
+    console.log('axios request', countryName)
     return axios
         .get(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
         .then(response => {
