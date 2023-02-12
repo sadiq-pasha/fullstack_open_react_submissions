@@ -52,8 +52,7 @@ const Form = (props) => {
             JSON-server has a bug where it reloads the db.json after a batch of requests.<br/>
             If a POST request is made during the reload it throws a 404 error and crashes the server.<br/>
             This can be avoided by not using the --watch flag when starting the server (that has problems of its own).</p>
-            
-            Safe if not using express
+            Safe if using express
         </div>
     </form>
 

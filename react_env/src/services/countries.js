@@ -1,7 +1,7 @@
 import axios from "axios";
 const API_KEY = process.env.REACT_APP_API_KEY
 
-let base_url = 'http://localhost:3001/api/countries'
+let base_url = '/api/countries'
 
 const getCountries = () => {
     return axios
