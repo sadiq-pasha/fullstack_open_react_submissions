@@ -1,15 +1,21 @@
 import axios from "axios";
 const API_KEY = process.env.REACT_APP_API_KEY
 
-let base_url = '/api/countries'
-
 const getCountries = () => {
     return axios
-        .get(base_url)
+        .get('https://restcountries.com/v3/all?fields=name')
         .then(response => {
-                return response.data
+                return response.data.map(country => country.name.common)
             })
     }
+
+const getData = (countryName) => {
+    return axios
+        .get(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
+        .then(response => {
+            return response.data[0]
+        })
+} 
 
 const getWeather = (latitude, longitude) => {
     return axios
@@ -21,6 +27,7 @@ const getWeather = (latitude, longitude) => {
     
 const countriesServices =  {
     getCountries,
+    getData,
     getWeather
 }
 

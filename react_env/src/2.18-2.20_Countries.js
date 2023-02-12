@@ -44,76 +44,95 @@ const WeatherDisplay = ({ latitude, longitude }) => {
 }
 
 const SingleCountryDisplay = ({ country }) => {
-    console.log('single country', country)
-    return (
-        <div className='single-country-display'>
-            <p className='country-title'>
-                <b>{country.name.common.toUpperCase()}</b>
-            </p>
-            <img className='flag-image'
-                src={country.flags.svg} 
-                alt={country.flags.alt} 
-                title={country.name.common}
-                />
-            <table className='fact-table'>
-                <tbody>
-                    <tr>
-                        <td>Official name</td>
-                        <td>{country.name.official}</td>
-                    </tr>
-                    <tr>
-                        <td>Capital city</td>
-                        <td>{country.capital}</td>
-                    </tr>
-                    <tr>
-                        <td>Current Weather</td>
-                        {Object.keys(country.capitalInfo).length === 0 ?
-                            <td> Weather data unavailable </td> :
-                            <WeatherDisplay latitude={country.capitalInfo.latlng[0]} longitude={country.capitalInfo.latlng[1]}/>
-                        }
-                    </tr>
-                    <tr>
-                        <td>Currency</td>
-                        <td>
-                            <ul>
-                                {Object.values(country.currencies).map(currency => currency.name).map(currency => {
-                                    return <li key={currency}>{currency}</li>
+    const  [countryData, setCountryData] = useState(null)
+    useEffect(() => {
+        countriesServices
+            .getData(country)
+            .then(response => {
+                setCountryData(response)
+            })
+    },[country])
+    if (countryData) {
+        return (
+            <div className='single-country-display'>
+                <p className='country-title'>
+                    <b>{countryData.name.common.toUpperCase()}</b>
+                </p>
+                <img className='flag-image'
+                    src={countryData.flags.svg} 
+                    alt={countryData.flags.alt} 
+                    title={countryData.name.common}
+                    />
+                <table className='fact-table'>
+                    <tbody>
+                        <tr>
+                            <td>Official name</td>
+                            <td>{countryData.name.official}</td>
+                        </tr>
+                        <tr>
+                            <td>Capital city</td>
+                            <td>{countryData.capital}</td>
+                        </tr>
+                        <tr>
+                            <td>Current Weather</td>
+                            {Object.keys(countryData.capitalInfo).length === 0 ?
+                                <td> Weather data unavailable </td> :
+                                <WeatherDisplay latitude={countryData.capitalInfo.latlng[0]} longitude={countryData.capitalInfo.latlng[1]}/>
+                            }
+                        </tr>
+                        <tr>
+                            <td>Currency</td>
+                            <td>
+                                <ul>
+                                    {Object.values(countryData.currencies).map(currency => currency.name).map(currency => {
+                                        return <li key={currency}>{currency}</li>
+                                        }
+                                        )}
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Population</td>
+                            <td>{countryData.population}</td>
+                        </tr>
+                        <tr>
+                            <td>Languages</td>
+                            <td>
+                                <ul>
+                                    {Object.values(countryData.languages).map(language => {
+                                        return <li key={language}>{language}</li>
                                     }
                                     )}
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Population</td>
-                        <td>{country.population}</td>
-                    </tr>
-                    <tr>
-                        <td>Languages</td>
-                        <td>
-                            <ul>
-                                {Object.values(country.languages).map(language => {
-                                    return <li key={language}>{language}</li>
-                                }
-                                )}
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Landlocked?</td>
-                        <td>{country.landlocked ? 'Yes' : 'No'}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    )
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Landlocked?</td>
+                            <td>{countryData.landlocked ? 'Yes' : 'No'}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        )
+    } else {
+        return (
+            <div className='single-country-display'>
+                <p className='country-title'>
+                    <b>{country}</b>
+                </p>
+                <p>
+                    Fetching data for {country}
+                </p>
+            </div>
+        )
+    }
 }
 
 const Display = ({countries, onClick, randomCountry}) => {
-    console.log(countries.map(c => c.name.common))
     if (countries.length === 1) {
         return (
             <div>
-                <p>Found 1 match: {countries[0].name.common}</p>
+                <p>Found 1 match: {countries[0]}</p>
                 <SingleCountryDisplay country={countries[0]}/>
             </div>
         )
@@ -132,7 +151,6 @@ const Display = ({countries, onClick, randomCountry}) => {
                 <table className='filtered-table'>
                     <tbody>
                         {countries
-                                .map(eachCountry => eachCountry.name.common)
                                 .sort()
                                 .map(eachCountry => <CountryListDisplay key={eachCountry} country={eachCountry} onClick={onClick}/>
                                 )}
@@ -209,12 +227,12 @@ const Countries = () => {
         const filteredCountries = strictFilter ? 
                                     [].concat(countriesAll
                                     .find(
-                                        eachCountry => eachCountry.name.common === filterInput
+                                        eachCountry => eachCountry === filterInput
                                     )) 
                                     : 
                                     countriesAll
                                     .filter(
-                                        eachCountry => eachCountry.name.common.toLowerCase().includes(filterInput.toLowerCase())
+                                        eachCountry => eachCountry.toLowerCase().includes(filterInput.toLowerCase())
                                     )
         return (
             <div className='top-div'>
