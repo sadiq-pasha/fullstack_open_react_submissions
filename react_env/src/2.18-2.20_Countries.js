@@ -129,7 +129,6 @@ const SingleCountryDisplay = ({ country }) => {
 }
 
 const Display = ({countries, onClick, randomCountry}) => {
-    console.log(countries)
     if (countries.length === 1) {
         return (
             <div>
@@ -226,8 +225,6 @@ const Countries = () => {
             </>
         )
     } else {
-        console.log('filter input', filterInput)
-        console.log('random country', randomCountry)
         const filteredCountries = strictFilter ? 
                                     [].concat(countriesAll
                                     .find(
