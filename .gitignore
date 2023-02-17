@@ -1,3 +1,10 @@
 # ignore web server node modules
 web_server/node_modules
 C:\Javascript envionment\javascript\fullstackopen_react_submissions\web_server_submission
+
+# env files
+*.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

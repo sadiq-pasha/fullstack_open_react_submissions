@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_KEY = process.env.REACT_APP_API_KEY
+const BASE_URL = '/api/countries'
 
 const getCountries = () => {
     return axios
@@ -19,7 +19,7 @@ const getData = (countryName) => {
 
 const getWeather = (latitude, longitude) => {
     return axios
-        .get(`https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&cnt=2&appid=${API_KEY}`)
+        .get(`${BASE_URL}/${latitude}&${longitude}`)
         .then((response) => {
             return(response.data)
         })
