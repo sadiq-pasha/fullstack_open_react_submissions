@@ -20,7 +20,7 @@ const WeatherDisplay = ({ latitude, longitude }) => {
         countriesServices
             .getWeather(latitude, longitude)
             .then((response) => {
-                const weatherImageUrl =`http://openweathermap.org/img/wn/${response.list[0].weather[0].icon}@2x.png` 
+                const weatherImageUrl =`https://openweathermap.org/img/wn/${response.list[0].weather[0].icon}@2x.png` 
                 const skyConditions = response.list[0].weather[0].description
                 const temperature = response.list[0].main.temp
                 const newWeatherObject = {'imgurl':weatherImageUrl, 'description':skyConditions, 'temperature':temperature}
