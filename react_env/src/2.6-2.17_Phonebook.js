@@ -48,11 +48,6 @@ const Form = (props) => {
         </div>
         <div>
             <button type="submit" onClick={(event) => props.handleNewEntry(event, "reset")}>reset</button>
-            <p>WARNING! reset could crash the server.<br/>
-            JSON-server has a bug where it reloads the db.json after a batch of requests.<br/>
-            If a POST request is made during the reload it throws a 404 error and crashes the server.<br/>
-            This can be avoided by not using the --watch flag when starting the server (that has problems of its own).</p>
-            Safe if using express
         </div>
     </form>
 
@@ -148,9 +143,8 @@ const PhoneBook = () => {
                 }
             } else if (buttonFunction === "reset") {
                 phoneBookService.resetDefault(persons)
-                    .then((response) => {
-                        setPersons(response)
-                    })
+                    .then(() => phoneBookService.getPhonebookEntries())
+                    .then((response) => setPersons(response))
             }
         }
         
@@ -165,7 +159,7 @@ const PhoneBook = () => {
     }
     
     const handleDelete = (event) => {
-        const deleteEntry = persons.filter(p => p.id === parseInt(event.target.id))
+        const deleteEntry = persons.filter(p => p.id === event.target.id)
         if (window.confirm(`${deleteEntry[0].name} will be deleted. Are you sure?`)) {
             phoneBookService
                 .deletePhonebookEntries(deleteEntry[0].id)

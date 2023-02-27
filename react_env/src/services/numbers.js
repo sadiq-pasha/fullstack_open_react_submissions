@@ -4,22 +4,18 @@ const defaultPhonebook = [
     { 
       "name": "Arto Hellas", 
       "number": "040-123456",
-      "id": 1
     },
     { 
       "name": "Ada Lovelace", 
       "number": "39-44-5323523",
-      "id": 2
     },
     { 
       "name": "Dan Abramov", 
       "number": "12-43-234345",
-      "id": 3
     },
     { 
       "name": "Mary Poppendieck", 
       "number": "39-23-6423122",
-      "id": 4
     }
   ]
 
@@ -42,9 +38,7 @@ const resetDefault = (persons) => {
                     .then(() => createPhonebookEntries(defaultPhonebook[1]))
                     .then(() => createPhonebookEntries(defaultPhonebook[2]))
                     .then(() => createPhonebookEntries(defaultPhonebook[3]))
-    return deletePersons.then(() => {
-        return defaultPhonebook
-    })
+    return deletePersons
 }
 
 const createPhonebookEntries = (newPersonObject) => {
