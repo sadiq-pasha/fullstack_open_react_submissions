@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 const Button = (props) => {
   return (
@@ -16,9 +16,9 @@ const StatisticLine = (props) => {
 }
 
 const Statistics = (props) => {
-  const numberOfGoodReviews = props.value.filter((element) => element === "good").length
-  const numberOfNeutralReviews = props.value.filter((element) => element === "neutral").length
-  const numberOfBadReviews = props.value.filter((element) => element === "bad").length
+  const numberOfGoodReviews = props.value.filter((element) => element === 'good').length
+  const numberOfNeutralReviews = props.value.filter((element) => element === 'neutral').length
+  const numberOfBadReviews = props.value.filter((element) => element === 'bad').length
   const mantissaLength = 3
   const averageReview = Math.trunc(((numberOfGoodReviews-numberOfBadReviews)/props.value.length) * Math.pow(10, mantissaLength)) / Math.pow(10, mantissaLength)
   const positiveReview = Math.trunc((((numberOfGoodReviews)/props.value.length)*100) * Math.pow(10, mantissaLength)) / Math.pow(10, mantissaLength)
@@ -39,17 +39,17 @@ const Statistics = (props) => {
         <StatisticLine text="average" value={averageReview}/>
         <StatisticLine text="positive" value={`${positiveReview}%`}/>
       </table>
-      )
+    )
   }
 }
 
 
 const UnicafeApp = () => {
   const [feedbackArray, setFeedbackArray] = useState([])
-  
+
   const changeFeedbackArray = (e, newValue) => {
     console.log(e)
-    if (newValue === "reset") {
+    if (newValue === 'reset') {
       setFeedbackArray([])
     } else {
       setFeedbackArray(feedbackArray.concat(newValue))

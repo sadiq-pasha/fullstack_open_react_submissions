@@ -67,28 +67,35 @@ h2 {
     text-align: left;
 }
 
-.note {
+.note-important{
     color: blue;
-    padding-top: 3px;
+    background-color: rgb(208, 220, 224);
+    padding: 3px;
     font-size: 18px;
+    border-radius: 5px;
+}
+.note-not-important {
+    color: blue;
+    padding: 3px;
+    font-size: 18px;
+    border-radius: 5px;
 }
 
 .error {
     color: red;
-    background: lightgrey;
-    font-size: 16px;
+    background:  rgb(236, 205, 205);
+    font-size: 14px;
     border-color: gray;
     border-radius: 12px;
-    border-style: solid;
     padding: 10px;
     margin-bottom: 10px;
     width: fit-content;
 }
 
-.addNotification, .deleteErrorNotification {
+.addNotification {
     color: green;
     background:  lightgreen;
-    font-size: 16px;
+    font-size: 14px;
     border-color: gray;
     border-radius: 12px;
     padding: 10px;
